@@ -1,0 +1,4 @@
+{
+  "mongoURI": "mongodb+srv://Yan:DATE2naissance@socialnetwork-eizd7.mongodb.net/test?retryWrites=true&w=majority",
+  "jwtSecret": "mysecrettoken"
+}
