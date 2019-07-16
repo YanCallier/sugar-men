@@ -11,6 +11,9 @@ const EditProfile = ({
   history
 }) => {
   const [formData, setFormData] = useState({
+    sugar: '',
+    position: '',
+    quantity: '',
     location: '',
     status: '',
     youtube: '',
@@ -40,11 +43,17 @@ const EditProfile = ({
 
     setFormData({
       location: loading || !profile.location ? '' : profile.location,
+      sugar: loading || !profile.sugar ? '' : profile.sugar,
+      position: loading || !profile.position ? '' : profile.position,
+      quantity: loading || !profile.quantity ? '' : profile.quantity,
       status: loading || !profile.status ? '' : profile.status
     });
   }, [loading, getCurrentProfile]);
 
   const {
+    sugar,
+    position,
+    quantity,
     location,
     status,
     youtube,
@@ -54,8 +63,17 @@ const EditProfile = ({
     instagram
   } = formData;
 
-  const onChange = e =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const onChange = e => {
+    formData[e.target.name] = e.target.value;
+
+    var calcStatus;
+    calcStatus = formData.sugar;
+    if (formData.sugar === 'sugar') calcStatus += ' ' + formData.quantity;
+    calcStatus += ' (' + formData.position + ')';
+    formData.status = calcStatus;
+
+    setFormData({ ...formData });
+  };
 
   const onSubmit = e => {
     e.preventDefault();
@@ -66,12 +84,72 @@ const EditProfile = ({
     <Fragment>
       <h1 className='large text-primary'>Edit Your Profile</h1>
       <p className='lead'>
-        <i className='fas fa-user' /> Let's get some information to make your
-        profile stand out
+        <i className='fas fa-user' /> {status}
       </p>
       <small>* = required field</small>
       <form className='form' onSubmit={e => onSubmit(e)}>
         <div className='form-group'>
+          <select name='sugar' value={sugar} onChange={e => onChange(e)}>
+            <option value='0'>
+              Préférez-vous mettre du sucre dans votre café ?
+            </option>
+            <option value='sugar'>Oui</option>
+            <option value='no-sugar'>Non</option>
+          </select>
+        </div>
+        {sugar === 'sugar' && (
+          <Fragment>
+            <div className='form-group'>
+              <select
+                name='quantity'
+                value={quantity}
+                onChange={e => onChange(e)}
+              >
+                <option value='0'>Combien ?</option>
+                <option value='user'>1</option>
+                <option value='lover'>2</option>
+                <option value='addict'>Plus de 2</option>
+              </select>
+            </div>
+            <div className='form-group'>
+              <select
+                name='position'
+                value={position}
+                onChange={e => onChange(e)}
+              >
+                <option value='0'>
+                  Avez-vous déjà menti sur vos préférences ?
+                </option>
+                <option value='warrior'>
+                  Jamais ! Ou peut-être une fois dans un moment de faiblesse...
+                </option>
+                <option value='dodger'>
+                  De temps en temps, par exemple face à votre boss ou votre
+                  belle mère
+                </option>
+                <option value='invisible'>Tout le temps !</option>
+              </select>
+            </div>
+          </Fragment>
+        )}
+        {sugar === 'no-sugar' && (
+          <div className='form-group'>
+            <select
+              name='position'
+              value={position}
+              onChange={e => onChange(e)}
+            >
+              <option value='0'>Comment voyez vous ceux qui en prenne ?</option>
+              <option value='pacifist'>Chacun ses goûts</option>
+              <option value='intolerant'>Ce n'est pas respecter le café</option>
+              <option value='nazi'>Ce sont des sous-hommes</option>
+            </select>
+            <small className='form-text'>
+              Give us an idea of where you are at in your career
+            </small>
+          </div>
+        )}
+        {/* <div className='form-group'>
           <select name='status' value={status} onChange={e => onChange(e)}>
             <option value='0'>* Select Professional Status</option>
             <option value='Developer'>Developer</option>
@@ -86,7 +164,7 @@ const EditProfile = ({
           <small className='form-text'>
             Give us an idea of where you are at in your career
           </small>
-        </div>
+        </div> */}
 
         <div className='form-group'>
           <input

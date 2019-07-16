@@ -5,6 +5,18 @@ const ProfileSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user'
   },
+  sugar: {
+    type: String
+  },
+  quantity: {
+    type: String
+  },
+  position: {
+    type: String
+  },
+  compagny: {
+    type: String
+  },
   compagny: {
     type: String
   },

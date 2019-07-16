@@ -65,7 +65,6 @@ export default function(state = initialState, action) {
         loading: false
       };
     case REMOVE_COMMENT:
-    case ADD_COMMENT:
       return {
         ...state,
         post: {

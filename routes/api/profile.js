@@ -48,6 +48,9 @@ router.post(
     }
 
     const {
+      sugar,
+      quantity,
+      position,
       compagny,
       website,
       location,
@@ -63,6 +66,9 @@ router.post(
     const profileFields = {};
     profileFields.user = req.user.id;
     if (compagny) profileFields.compagny = compagny;
+    if (sugar) profileFields.sugar = sugar;
+    if (quantity) profileFields.quantity = quantity;
+    if (position) profileFields.position = position;
     if (website) profileFields.website = website;
     if (location) profileFields.location = location;
     if (status) profileFields.status = status;
