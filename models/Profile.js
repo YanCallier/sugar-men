@@ -5,6 +5,14 @@ const ProfileSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user'
   },
+  friends: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'friends'
+  },
+  waitingFriends: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'waitingFriends'
+  },
   sugar: {
     type: String
   },

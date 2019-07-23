@@ -3,6 +3,8 @@ import { setAlert } from './alert';
 import {
   GET_PROFILE,
   GET_PROFILES,
+  FRIEND_REQUEST,
+  FRIENDS_PROFILES,
   PROFILE_ERROR,
   CLEAR_PROFILE,
   ACCOUNT_DELETED
@@ -27,8 +29,6 @@ export const getCurrentProfile = () => async dispatch => {
 
 // get all profiles
 export const getProfiles = () => async dispatch => {
-  //dispatch({ type: CLEAR_PROFILE });
-
   try {
     const res = await axios.get('api/profile');
 
@@ -74,7 +74,7 @@ export const createProfile = (
       }
     };
 
-    const res = await axios.post('api/profile', formData, config);
+    const res = await axios.post(`api/profile`, formData, config);
 
     dispatch({
       type: GET_PROFILE,
@@ -83,7 +83,7 @@ export const createProfile = (
 
     if (edit) dispatch(setAlert('Profile Updated', 'success'));
     else {
-      dispatch(setAlert('Profile Created', 'success'));
+      dispatch(setAlert('Profile Créé', 'success'));
       history.push('/dashboard');
     }
   } catch (err) {
@@ -92,6 +92,69 @@ export const createProfile = (
     if (errors) {
       errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
     }
+
+    dispatch({
+      type: PROFILE_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status }
+    });
+  }
+};
+
+export const friendRequest = (friendId, userId) => async dispatch => {
+  try {
+    const res = await axios.put(
+      'api/profile/friendRequest/' + userId + '/' + friendId
+    );
+
+    dispatch({
+      type: FRIEND_REQUEST,
+      payload: res.data
+    });
+
+    dispatch(setAlert(res.data.msg, 'success'));
+  } catch (err) {
+    dispatch(setAlert(err.response.data.msg, 'danger'));
+
+    dispatch({
+      type: PROFILE_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status }
+    });
+  }
+};
+
+// get friends id
+export const friendsProfiles = userId => async dispatch => {
+  try {
+    const res = await axios.get('/api/profile/user/' + userId);
+    const wrapInObjectData = {};
+    wrapInObjectData[res.data.user._id] = res.data;
+
+    dispatch({
+      type: FRIENDS_PROFILES,
+      payload: wrapInObjectData
+    });
+  } catch (err) {
+    dispatch({
+      type: PROFILE_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status }
+    });
+  }
+};
+
+export const updateFriends = (friendId, userId, waiting) => async dispatch => {
+  try {
+    const res = await axios.put(
+      'api/profile/updateFriends/' + userId + '/' + friendId + '/' + waiting
+    );
+
+    dispatch({
+      type: FRIEND_REQUEST,
+      payload: res.data
+    });
+
+    dispatch(setAlert(res.data.msg, 'success'));
+  } catch (err) {
+    dispatch(setAlert(err.response.data.msg, 'danger'));
 
     dispatch({
       type: PROFILE_ERROR,

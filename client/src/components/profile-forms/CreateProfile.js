@@ -5,30 +5,31 @@ import { connect } from 'react-redux';
 import { createProfile } from '../../actions/profile';
 
 const CreateProfile = ({ createProfile, history }) => {
-  const [formData, setFromData] = useState({
-    location: '',
-    status: '',
-    youtube: '',
-    twitter: '',
-    facebook: '',
-    linkedin: '',
-    instagram: ''
+  const [formData, setFormData] = useState({
+    sugar: '',
+    position: '',
+    quantity: ''
   });
 
-  const [displaySocialInputs, toggleSocialInputs] = useState(false);
+  const { sugar, position, quantity, status } = formData;
 
-  const {
-    location,
-    status,
-    youtube,
-    twitter,
-    facebook,
-    linkedin,
-    instagram
-  } = formData;
+  const changeSugar = e => {
+    formData.quantity = '';
+    formData.position = '';
+    onChange(e);
+  };
 
-  const onChange = e =>
-    setFromData({ ...formData, [e.target.name]: e.target.value });
+  const onChange = e => {
+    formData[e.target.name] = e.target.value;
+
+    var calcStatus;
+    calcStatus = formData.sugar;
+    if (formData.sugar === 'sugar') calcStatus += ' ' + formData.quantity;
+    calcStatus += ' (' + formData.position + ')';
+    formData.status = calcStatus;
+
+    setFormData({ ...formData });
+  };
 
   const onSubmit = e => {
     e.preventDefault();
@@ -37,111 +38,77 @@ const CreateProfile = ({ createProfile, history }) => {
 
   return (
     <Fragment>
-      <h1 className='large text-primary'>Create Your Profile</h1>
+      <h1 className='large text-primary'>Créez votre profile</h1>
       <p className='lead'>
-        <i className='fas fa-user' /> Let's get some information to make your
-        profile stand out
+        <i className='fas fa-user' /> {status && <Fragment>{status}</Fragment>}
+        {!status && (
+          <Fragment>
+            Créez votre profile pour participer à la communauté sugra-men !
+          </Fragment>
+        )}
       </p>
-      <small>* = required field</small>
       <form className='form' onSubmit={e => onSubmit(e)}>
         <div className='form-group'>
-          <select name='status' value={status} onChange={e => onChange(e)}>
-            <option value='0'>* Select Professional Status</option>
-            <option value='Developer'>Developer</option>
-            <option value='Junior Developer'>Junior Developer</option>
-            <option value='Senior Developer'>Senior Developer</option>
-            <option value='Manager'>Manager</option>
-            <option value='Student or Learning'>Student or Learning</option>
-            <option value='Instructor'>Instructor or Teacher</option>
-            <option value='Intern'>Intern</option>
-            <option value='Other'>Other</option>
+          <small>Préférez-vous mettre du sucre dans votre café ?</small>
+          <select name='sugar' value={sugar} onChange={e => changeSugar(e)}>
+            <option value=''>
+              Préférez-vous mettre du sucre dans votre café ?
+            </option>
+            <option value='sugar'>Oui</option>
+            <option value='no-sugar'>Non</option>
           </select>
-          <small className='form-text'>
-            Give us an idea of where you are at in your career
-          </small>
         </div>
-
-        <div className='form-group'>
-          <input
-            type='text'
-            placeholder='Location'
-            name='location'
-            value={location}
-            onChange={e => onChange(e)}
-          />
-          <small className='form-text'>
-            City & state suggested (eg. Boston, MA)
-          </small>
-        </div>
-
-        <div className='my-2'>
-          <button
-            onClick={() => toggleSocialInputs(!displaySocialInputs)}
-            type='button'
-            className='btn btn-light'
-          >
-            Add Social Network Links
-          </button>
-          <span>Optional</span>
-        </div>
-
-        {displaySocialInputs && (
+        {sugar === 'sugar' && (
           <Fragment>
-            <div className='form-group social-input'>
-              <i className='fab fa-twitter fa-2x' />
-              <input
-                type='text'
-                placeholder='Twitter URL'
-                name='twitter'
-                value={twitter}
+            <div className='form-group'>
+              <small>Combien ?</small>
+              <select
+                name='quantity'
+                value={quantity}
                 onChange={e => onChange(e)}
-              />
+              >
+                <option value=''>Combien ?</option>
+                <option value='user'>1</option>
+                <option value='lover'>2</option>
+                <option value='addict'>Plus de 2</option>
+              </select>
             </div>
-
-            <div className='form-group social-input'>
-              <i className='fab fa-facebook fa-2x' />
-              <input
-                type='text'
-                placeholder='Facebook URL'
-                name='facebook'
-                value={facebook}
+            <div className='form-group'>
+              <small>Avez-vous déjà menti sur vos préférences ?</small>
+              <select
+                name='position'
+                value={position}
                 onChange={e => onChange(e)}
-              />
-            </div>
-
-            <div className='form-group social-input'>
-              <i className='fab fa-youtube fa-2x' />
-              <input
-                type='text'
-                placeholder='YouTube URL'
-                name='youtube'
-                value={youtube}
-                onChange={e => onChange(e)}
-              />
-            </div>
-
-            <div className='form-group social-input'>
-              <i className='fab fa-linkedin fa-2x' />
-              <input
-                type='text'
-                placeholder='Linkedin URL'
-                name='linkedin'
-                value={linkedin}
-                onChange={e => onChange(e)}
-              />
-            </div>
-
-            <div className='form-group social-input'>
-              <i className='fab fa-instagram fa-2x' />
-              <input
-                type='text'
-                placeholder='Instagram URL'
-                name='instagram'
-                value={instagram}
-                onChange={e => onChange(e)}
-              />
+              >
+                <option value=''>
+                  Avez-vous déjà menti sur vos préférences ?
+                </option>
+                <option value='warrior'>
+                  Jamais ! Ou peut-être une fois dans un moment de faiblesse...
+                </option>
+                <option value='dodger'>
+                  De temps en temps, par exemple face à votre boss ou votre
+                  belle mère
+                </option>
+                <option value='invisible'>Tout le temps !</option>
+              </select>
             </div>
           </Fragment>
+        )}
+        {sugar === 'no-sugar' && (
+          <div className='form-group'>
+            <small>Comment voyez vous ceux qui en prenne ?</small>
+            <select
+              name='position'
+              value={position}
+              onChange={e => onChange(e)}
+            >
+              <option value=''>Comment voyez vous ceux qui en prenne ?</option>
+              <option value='pacifist'>Chacun ses goûts</option>
+              <option value='intolerant'>Ce n'est pas respecter le café</option>
+              <option value='nazi'>Ce sont des sous-hommes</option>
+            </select>
+          </div>
         )}
 
         <input type='submit' className='btn btn-primary my-1' />

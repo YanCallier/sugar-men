@@ -218,6 +218,11 @@ img {
   border-radius: 50%;
 }
 
+.small-img {
+  height: 50px;
+  width: 50px;
+}
+
 .line {
   height: 1px;
   background: #ccc;
@@ -488,6 +493,16 @@ button {
   margin-bottom: 0.5rem;
 }
 
+.flex {
+  display: flex;
+  justify-content: space-between;
+}
+
+.endline {
+  align-self: flex-end;
+  justify-self: flex-end;
+}
+
 /* Mobile Styles */
 @media (max-width: 700px) {
   .container {
@@ -496,6 +511,11 @@ button {
 
   .hide-sm {
     display: none;
+  }
+
+  .btn-large {
+    width: 100%;
+    margin-bottom: 3px;
   }
 
   /* Text Styles */

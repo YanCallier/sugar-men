@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 const ProfileTop = ({
   profile: {
-    location,
     status,
     user: { name, avatar }
   }

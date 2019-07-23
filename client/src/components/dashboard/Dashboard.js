@@ -1,9 +1,10 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Spinner from '../layout/Spinner';
 import DashboardActions from './DashboardActions';
+import FriendIteme from './FriendIteme';
 import { getCurrentProfile, deleteAccount } from '../../actions/profile';
 
 const Dashboard = ({
@@ -16,26 +17,63 @@ const Dashboard = ({
     getCurrentProfile();
   }, [getCurrentProfile]);
 
-  //return loading && profile === null ? <Spinner /> : <Fragment>test</Fragment>;
+  const [displayFriends, toggleFriends] = useState(false);
 
-  // if (loading && profile === null) {
-  //   return <Spinner />;
-  // } else {
-  //   return <Fragment>test</Fragment>;
-  // }
-
-  if (loading && profile === null) return <Spinner />;
-
+  if (profile === null) return <Spinner />;
+  console.log(profile.friends);
   return (
     <Fragment>
       <h1 className='large text-primary'>Dashboard</h1>
       <p className='lead'>
         {/* // # JSX Expression : Condition on the fly with the logical operator && */}
-        <i className='fas fa-user' /> welcome {user && user.name}
+        <i className='fas fa-user' /> Bienvenue, {user && user.name}
       </p>
       {profile && (
         <Fragment>
-          <DashboardActions />
+          <div className='dash-buttons'>
+            <Link to='edit-profile' className='btn btn-light'>
+              <i className='fas fa-user-circle text-primary' /> Edit Profile
+            </Link>
+            <div
+              onClick={() => toggleFriends(!displayFriends)}
+              className='btn btn-light btn-large'
+            >
+              <i className='fas fa-user-friends text-primary' /> Voir les amis
+            </div>
+            <Link to='add-education' className='btn btn-light'>
+              <i className='fas fa-graduation-cap text-primary' /> Add Education
+            </Link>
+          </div>
+
+          {displayFriends && (
+            <Fragment>
+              <h2 className='my-1'>Amis</h2>
+              {(!profile.friends || profile.friends.length === 0) && (
+                <div>Haha vous n'avez pas d'amis</div>
+              )}
+              {profile.friends &&
+                user &&
+                profile.friends.length > 0 &&
+                profile.friends.map(friend => (
+                  <FriendIteme key={friend} friend={friend} user={user._id} />
+                ))}
+            </Fragment>
+          )}
+
+          {profile.waitingFriends &&
+            profile.waitingFriends.length > 0 &&
+            profile.waitingFriends.map(waitingFriend => (
+              <Fragment key={waitingFriend}>
+                <h2 className='my-1'>Ils aimeraient bien être votre ami :</h2>
+                <FriendIteme
+                  key={waitingFriend}
+                  friend={waitingFriend}
+                  user={user._id}
+                  waiting={true}
+                />
+              </Fragment>
+            ))}
+
           <div className='my-2'>
             <button className='btn btn-danger' onClick={() => deleteAccount()}>
               <i className='fas fa-user-minus' /> Delete my account
@@ -45,9 +83,12 @@ const Dashboard = ({
       )}
       {!profile && (
         <Fragment>
-          <p>You don't have a profile yet, please add some infos</p>
+          <p>
+            Vous n'avez pas encore de profile, pouvez vous en créer un pour nous
+            donner votre vision des choses ?
+          </p>
           <Link to='/create-profile' className='btn btn-primary my-1'>
-            Creat Profile
+            Créer un profile
           </Link>
         </Fragment>
       )}

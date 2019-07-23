@@ -21,11 +21,11 @@ const Profile = ({
   return (
     <Fragment>
       <Link to='/profiles' className='btn btn-light'>
-        Tous les buveurs
+        Tous les sucreurs
       </Link>
       {auth.isAuthenticated &&
         !auth.loading &&
-        auth.user.id === profile.user._id && (
+        auth.user._id === profile.user._id && (
           <Link to='/edit-profile' className='btn btn-dark'>
             Editer le profile
           </Link>

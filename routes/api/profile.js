@@ -18,7 +18,9 @@ router.get('/me', auth, async (req, res) => {
     );
 
     if (!profile) {
-      return res.status(400).json({ msg: 'There is no profile for this user' });
+      return res
+        .status(400)
+        .json({ msg: "Il n'y a pas de profile pour cet utilisateur" });
     }
 
     res.json(profile);
@@ -109,6 +111,118 @@ router.post(
   }
 );
 
+// @route    POST api/profile
+// @desc     Save a friend request
+// @access   Private
+router.put('/friendRequest/:userId/:friendId', async (req, res) => {
+  try {
+    if (req.params.userId === req.params.friendId) {
+      return res.status(200).json({
+        msg:
+          "Vous voulez être amis avec vous même ? C'est mignon :-) mais un peu flippant aussi."
+      });
+    }
+
+    let profile = await Profile.findOne({ user: req.params.friendId });
+
+    if (!profile) {
+      return res.status(400).json({
+        msg: "Cet utilisateur n'existe pas ou n'a pas de profile :-/"
+      });
+    }
+
+    const friends = profile.friends;
+
+    if (friends && friends.indexOf(req.params.userId) !== -1) {
+      return res.status(200).json({ msg: 'Vous êtes déjà amis :-)' });
+    }
+
+    const waitingFriends = profile.waitingFriends;
+
+    if (waitingFriends && waitingFriends.indexOf(req.params.userId) !== -1) {
+      return res.status(200).json({ msg: 'Déjà envoyée :-)' });
+    }
+
+    waitingFriends.push(req.params.userId);
+
+    profile = await Profile.findOneAndUpdate(
+      { user: req.params.friendId },
+      { $set: { waitingFriends: profile.waitingFriends } },
+      { new: true }
+    );
+
+    return res.json({ msg: "C'est envoyé :-)" });
+  } catch (err) {
+    if (err.kind === 'ObjectId') {
+      return res.status(400).json({
+        msg: "Cet utilisateur n'existe pas ou n'a pas de profile :-/"
+      });
+    }
+
+    res.status(500).send({ msg: 'Erreur serveur' });
+  }
+});
+
+// @route    POST api/profile
+// @desc     update friend and waiting friend list
+// @access   Private
+router.put('/updateFriends/:userId/:friendId/:waiting', async (req, res) => {
+  try {
+    let userProfile = await Profile.findOne({ user: req.params.userId });
+    let friendProfile = await Profile.findOne({ user: req.params.friendId });
+
+    if (req.params.waiting === 'waiting') {
+      const waitingFriends = friendProfile.waitingFriends;
+      waitingFriends.splice(req.params.userId);
+
+      friendProfile = await Profile.findOneAndUpdate(
+        { user: req.params.friendId },
+        { $set: { waitingFriends: friendProfile.waitingFriends } },
+        { new: true }
+      );
+    } else {
+      const userFriends = userProfile.friends;
+
+      if (userFriends.indexOf(req.params.friendId) !== -1) {
+        userFriends.splice(req.params.friendId);
+      } else {
+        userFriends.push(req.params.friendId);
+      }
+
+      userProfile = await Profile.findOneAndUpdate(
+        { user: req.params.userId },
+        { $set: { friends: userFriends } },
+        { new: true }
+      );
+
+      friendFriends = friendProfile.friends;
+
+      if (friendFriends.indexOf(req.params.userId) !== -1) {
+        friendFriends.splice(req.params.userId);
+      } else {
+        friendFriends.push(req.params.userId);
+      }
+
+      friendProfile = await Profile.findOneAndUpdate(
+        { user: req.params.friendId },
+        { $set: { friends: friendFriends } },
+        { new: true }
+      );
+
+      return res.json({ msg: 'Mise à jour effctuée' });
+    }
+    return;
+  } catch (err) {
+    if (err.kind === 'ObjectId') {
+      return res.status(400).json({
+        msg: "Cet utilisateur n'existe pas ou n'a pas de profile :-/"
+      });
+    }
+
+    res.status(500).send({ msg: 'Erreur serveur' });
+  }
+});
+
 // @route    GET api/profile
 // @desc     Get all profiles
 // @access   Public
@@ -147,7 +261,7 @@ router.get('/user/:user_id', async (req, res) => {
 
 // @route    DELETE api/profile
 // @desc     Delete user, profile and posts
-// @access   Private
+// @access   Privates
 
 router.delete('/', auth, async (req, res) => {
   try {

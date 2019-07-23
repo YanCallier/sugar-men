@@ -14,9 +14,9 @@ const Profiles = ({ getProfiles, profile: { profiles, loading } }) => {
 
   return (
     <Fragment>
-      <h1 className='large text-primary'>Buveurs de café</h1>
+      <h1 className='large text-primary'>Les sucreurs</h1>
       <p className='lead'>
-        <i className='fas fa-coffe' /> Aller voir les autres
+        <i className='fas fa-coffe' /> Et les autres
       </p>
       <div className='profiles'>
         {profiles.length > 0 &&
