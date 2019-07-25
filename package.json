@@ -13,6 +13,7 @@
   "author": "Yan Callier",
   "license": "ISC",
   "dependencies": {
+    "@material-ui/core": "4.2.1",
     "bcryptjs": "2.4.3",
     "config": "3.1.0",
     "express": "4.17.1",

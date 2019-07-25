@@ -1,8 +1,8 @@
 /* Global Styles */
 :root {
-  --primary-color: #17a2b8;
-  --dark-color: #343a40;
-  --light-color: #f4f4f4;
+  --primary-color: #616161;
+  --dark-color: #424242;
+  --light-color: #efebe9;
   --danger-color: #dc3545;
   --success-color: #28a745;
 }
@@ -66,8 +66,16 @@ img {
   text-align: center;
 }
 
+.text-success {
+  color: var(--success-color);
+}
+
 .text-primary {
   color: var(--primary-color);
+}
+
+.text-light {
+  color: var(--light-color);
 }
 
 .text-dark {
@@ -124,6 +132,18 @@ img {
 }
 .my-3 {
   margin: 3rem 0;
+}
+.mx {
+  margin: 0 0.5rem;
+}
+.mx-1 {
+  margin: 0 1rem;
+}
+.mx-2 {
+  margin: 0 2rem;
+}
+.mx-3 {
+  margin: 0 3rem;
 }
 
 .btn {
@@ -493,9 +513,18 @@ button {
   margin-bottom: 0.5rem;
 }
 
-.flex {
+.flex-between {
   display: flex;
   justify-content: space-between;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: space-evenly;
 }
 
 .endline {
