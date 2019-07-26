@@ -18,29 +18,90 @@ const PrimaryCheckbox = withStyles({
 })(props => <Checkbox color='default' {...props} />);
 
 const PostForm = ({ addPost }) => {
-  const [text, setText] = useState('');
+  // const [text, setText] = useState('');
   const [displayPostForm, togglePostForm] = useState(false);
   const [useTarget, toggleTarget] = useState(true);
   const [displaySugar, toggleSugar] = useState(false);
   const [displayNoSugar, toggleNoSugar] = useState(false);
 
-  let target = ({
-    positions: {},
-    quantities: {}
-  } = useState());
+  const [formData, setFormData] = useState({
+    text: '',
+    useTarget: useTarget,
+    target: {
+      positions: {},
+      quantities: {}
+    }
+  });
 
-  const updateQuantity = value => {
-    if (!target.quantities[value]) target.quantities[value] = true;
-    else target.quantities[value] = false;
-    console.log(target);
+  const {
+    text,
+    target: {
+      positions: {},
+      quantities: {}
+    }
+  } = formData;
+
+  const openNewForm = () => {
+    setText('');
+    formData.target.positions = {};
+    formData.target.quantities = {};
+    formData.useTarget = true;
+    setFormData({ ...formData });
+    if (!useTarget) toggleTarget(!useTarget);
+    if (displaySugar) toggleSugar(!displaySugar);
+    if (displayNoSugar) toggleNoSugar(!displayNoSugar);
+    togglePostForm(!displayPostForm);
+  };
+
+  const setTarget = (targetType, value) => {
+    let target = formData.target[targetType];
+
+    if (!target[value]) target[value] = true;
+    else target[value] = false;
+
+    setFormData({ ...formData });
+  };
+
+  const setText = text => {
+    formData.text = text;
+    setFormData({ ...formData });
+  };
+
+  const checkAll = () => {
+    formData.target.positions = {};
+    formData.target.quantities = {};
+
+    if (displaySugar) toggleSugar(!displaySugar);
+    if (displayNoSugar) toggleNoSugar(!displayNoSugar);
+
+    toggleTarget(!useTarget);
+    formData.useTarget = !useTarget;
+
+    setFormData({ ...formData });
+  };
+
+  const checkSugar = () => {
+    formData.target.positions.warrior = false;
+    formData.target.positions.doger = false;
+    formData.target.positions.invisible = false;
+    formData.target.quantities = {};
+    setFormData({ ...formData });
+
+    toggleSugar(!displaySugar);
+  };
+
+  const checkNoSugar = () => {
+    formData.target.positions.pacifist = false;
+    formData.target.positions.intolerant = false;
+    formData.target.positions.nazi = false;
+    setFormData({ ...formData });
+
+    toggleNoSugar(!displayNoSugar);
   };
 
   return (
     <div className='post-form'>
-      <div
-        onClick={() => togglePostForm(!displayPostForm)}
-        className='btn btn-light btn-large'
-      >
+      <div onClick={() => openNewForm()} className='btn btn-light btn-large'>
         <i className='fas fa-pencil-alt text-dark' /> Nouveau sujet
       </div>
       {displayPostForm && (
@@ -48,10 +109,8 @@ const PostForm = ({ addPost }) => {
           className='form my-1'
           onSubmit={e => {
             e.preventDefault();
-            if (!useTarget) target = false;
-            console.log(target);
-            //addPost({ text });
-            setText('');
+            addPost(formData);
+            togglePostForm(!displayPostForm);
           }}
         >
           <textarea
@@ -75,7 +134,7 @@ const PostForm = ({ addPost }) => {
                   <PrimaryCheckbox
                     name='toutlemonde'
                     value='toutlemonde'
-                    onChange={() => toggleTarget(!useTarget)}
+                    onChange={() => checkAll()}
                     inputProps={{
                       'aria-label': 'primary checkbox'
                     }}
@@ -92,7 +151,7 @@ const PostForm = ({ addPost }) => {
                       <PrimaryCheckbox
                         name='sugar'
                         value='sugar'
-                        onChange={() => toggleSugar(!displaySugar)}
+                        onChange={() => checkSugar()}
                         inputProps={{
                           'aria-label': 'primary checkbox'
                         }}
@@ -108,7 +167,7 @@ const PostForm = ({ addPost }) => {
                             <PrimaryCheckbox
                               name='user'
                               value='user'
-                              onChange={() => updateQuantity('user')}
+                              onChange={() => setTarget('quantities', 'user')}
                               inputProps={{
                                 'aria-label': 'primary checkbox'
                               }}
@@ -122,6 +181,7 @@ const PostForm = ({ addPost }) => {
                             <PrimaryCheckbox
                               name='lover'
                               value='lover'
+                              onChange={() => setTarget('quantities', 'lover')}
                               inputProps={{
                                 'aria-label': 'primary checkbox'
                               }}
@@ -135,6 +195,7 @@ const PostForm = ({ addPost }) => {
                             <PrimaryCheckbox
                               name='addict'
                               value='addict'
+                              onChange={() => setTarget('quantities', 'addict')}
                               inputProps={{
                                 'aria-label': 'primary checkbox'
                               }}
@@ -150,6 +211,7 @@ const PostForm = ({ addPost }) => {
                             <PrimaryCheckbox
                               name='warrior'
                               value='warrior'
+                              onChange={() => setTarget('positions', 'warrior')}
                               inputProps={{
                                 'aria-label': 'primary checkbox'
                               }}
@@ -163,6 +225,7 @@ const PostForm = ({ addPost }) => {
                             <PrimaryCheckbox
                               name='doger'
                               value='doger'
+                              onChange={() => setTarget('positions', 'doger')}
                               inputProps={{
                                 'aria-label': 'primary checkbox'
                               }}
@@ -176,6 +239,9 @@ const PostForm = ({ addPost }) => {
                             <PrimaryCheckbox
                               name='invisible'
                               value='invisible'
+                              onChange={() =>
+                                setTarget('positions', 'invisible')
+                              }
                               inputProps={{
                                 'aria-label': 'primary checkbox'
                               }}
@@ -194,7 +260,7 @@ const PostForm = ({ addPost }) => {
                       <PrimaryCheckbox
                         name='no-sugar'
                         value='no_sugar'
-                        onChange={() => toggleNoSugar(!displayNoSugar)}
+                        onChange={() => checkNoSugar()}
                         inputProps={{
                           'aria-label': 'primary checkbox'
                         }}
@@ -210,6 +276,9 @@ const PostForm = ({ addPost }) => {
                             <PrimaryCheckbox
                               name='pacifist'
                               value='pacifist'
+                              onChange={() =>
+                                setTarget('positions', 'pacifist')
+                              }
                               inputProps={{
                                 'aria-label': 'primary checkbox'
                               }}
@@ -223,6 +292,9 @@ const PostForm = ({ addPost }) => {
                             <PrimaryCheckbox
                               name='intolerant'
                               value='intolerant'
+                              onChange={() =>
+                                setTarget('positions', 'intolerant')
+                              }
                               inputProps={{
                                 'aria-label': 'primary checkbox'
                               }}
@@ -236,6 +308,7 @@ const PostForm = ({ addPost }) => {
                             <PrimaryCheckbox
                               name='nazi'
                               value='nazi'
+                              onChange={() => setTarget('positions', 'nazi')}
                               inputProps={{
                                 'aria-label': 'primary checkbox'
                               }}

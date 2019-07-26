@@ -7,12 +7,12 @@ import PostItem from './PostItem';
 import PostForm from './PostForm';
 
 const Posts = ({ getPosts, post: { posts, loading } }) => {
-  // useEffect(() => {
-  //   console.log('PostS initiate');
-  //   getPosts();
-  // }, [getPosts]);
+  useEffect(() => {
+    console.log('PostS initiate');
+    getPosts();
+  }, [getPosts]);
 
-  getPosts();
+  //getPosts();
 
   if (loading) return <Spinner />;
 

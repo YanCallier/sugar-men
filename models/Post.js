@@ -10,6 +10,12 @@ const PostSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  target: {
+    type: Schema.Types.Object
+  },
+  useTarget: {
+    type: String
+  },
   name: {
     type: String
   },
