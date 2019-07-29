@@ -30,8 +30,6 @@ router.post(
     try {
       const user = await User.findById(req.user.id).select('-password');
 
-      console.log(req.body);
-
       const newPost = new Post({
         text: req.body.text,
         useTarget: req.body.useTarget,
@@ -56,7 +54,55 @@ router.post(
 router.get('/', auth, async (req, res) => {
   try {
     const posts = await Post.find().sort({ date: -1 });
+
+    console.log(auth);
+
     res.json(posts);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+router.get('/filtre/:user_id', auth, async (req, res) => {
+  try {
+    const posts = await Post.find().sort({ date: -1 });
+    const profile = await Profile.findOne({
+      user: req.params.user_id
+    });
+
+    const filteredPosts = [];
+
+    for (post of posts) {
+      let positionPush = false;
+      if (
+        post.target &&
+        post.target.positions &&
+        post.target.positions[profile.position]
+      ) {
+        positionPush = true;
+      }
+
+      let quantityPush = false;
+      if (
+        post.target &&
+        post.target.quantities &&
+        post.target.quantities[profile.quantity]
+      ) {
+        quantityPush = true;
+      }
+
+      if (
+        post.useTarget === 'false' ||
+        quantityPush ||
+        positionPush ||
+        post.user.toString() === req.params.user_id
+      ) {
+        filteredPosts.push(post);
+      }
+    }
+
+    res.json(filteredPosts);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
@@ -219,7 +265,6 @@ router.post(
 // @desc    Delete a post
 // @access   Privates
 router.delete('/comment/:id/:comment_id', auth, async (req, res) => {
-  console.log('test');
   try {
     const post = await Post.findById(req.params.id);
     const comment = post.comments.find(

@@ -243,6 +243,11 @@ img {
   width: 50px;
 }
 
+.mini-img {
+  height: 30px;
+  width: 30px;
+}
+
 .line {
   height: 1px;
   background: #ccc;
@@ -323,6 +328,10 @@ button {
   background: var(--light-color);
 }
 
+.chat {
+  height: 20em;
+}
+
 /* Navbar */
 .navbar {
   display: flex;
@@ -354,6 +363,33 @@ button {
 .navbar .welcome span {
   margin-right: 0.6rem;
 }
+
+/* online people */
+
+.peoplebar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.7rem 2rem;
+  position: fixed;
+  z-index: 1;
+  width: 100%;
+  opacity: 0.9;
+  bottom: 0;
+  border-top: solid 1px var(--primary-color);
+}
+
+.minimoy {
+  display: flex;
+  align-items: center;
+}
+
+/* .onlinePeople {
+  position: fixed;
+  bottom: 100px;
+  right: 100px;
+  opacity: 0.9;
+} */
 
 /* Landing Page */
 .landing {

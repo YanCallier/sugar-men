@@ -12,9 +12,9 @@ import {
 } from './types';
 
 // get posts
-export const getPosts = () => async dispatch => {
+export const getPosts = id => async dispatch => {
   try {
-    const res = await axios.get('api/posts');
+    const res = await axios.get('api/posts/filtre/' + id);
 
     dispatch({
       type: GET_POSTS,

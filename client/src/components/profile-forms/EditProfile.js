@@ -65,7 +65,6 @@ const EditProfile = ({
     createProfile(formData, history, true);
   };
 
-  console.log(history);
   return (
     <Fragment>
       <h1 className='large text-primary'>

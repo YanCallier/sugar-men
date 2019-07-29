@@ -8,7 +8,6 @@ import { friendsProfiles, updateFriends } from '../../actions/profile';
 const FriendItem = ({
   updateFriends,
   friendsProfiles,
-  // profile: { profile, loading },
   friend,
   user,
   allFriendsProfiles,
@@ -40,13 +39,18 @@ const FriendItem = ({
         <strong>{name}</strong> {status}
       </Link>
       {!waiting && (
-        <button
-          className='btn btn-dark'
-          onClick={() => updateFriends(user, friend)}
-        >
-          Rompre l'amitié {'    '}
-          <i className='fas fa-sad-tear' />
-        </button>
+        <div>
+          <Link to={'/chat'} className='btn btn-dark'>
+            {/* <Link to={'/chat/' + user + '/' + friend} className='btn btn-dark'> */}
+            Chat
+          </Link>
+          <button
+            className='btn btn-dark'
+            onClick={() => updateFriends(user, friend)}
+          >
+            Rompre
+          </button>
+        </div>
       )}
       {waiting && (
         <div>

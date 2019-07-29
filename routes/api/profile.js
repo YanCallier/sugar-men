@@ -49,41 +49,13 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const {
-      sugar,
-      quantity,
-      position,
-      compagny,
-      website,
-      location,
-      status,
-      skills,
-      twitter,
-      youtube,
-      facebook,
-      linkedin,
-      instagram
-    } = req.body;
+    const { sugar, quantity, position } = req.body;
 
     const profileFields = {};
     profileFields.user = req.user.id;
-    if (compagny) profileFields.compagny = compagny;
-    if (sugar) profileFields.sugar = sugar;
-    if (quantity) profileFields.quantity = quantity;
-    if (position) profileFields.position = position;
-    if (website) profileFields.website = website;
-    if (location) profileFields.location = location;
-    if (status) profileFields.status = status;
-    if (skills) {
-      profileFields.skills = skills.split(',').map(skill => skill.trim());
-    }
-
-    profileFields.social = {};
-    if (twitter) profileFields.social.twitter = twitter;
-    if (youtube) profileFields.social.youtube = youtube;
-    if (facebook) profileFields.social.facebook = facebook;
-    if (linkedin) profileFields.social.linkedin = linkedin;
-    if (instagram) profileFields.social.instagram = instagram;
+    profileFields.sugar = sugar;
+    profileFields.quantity = quantity;
+    profileFields.position = position;
 
     try {
       let profile = await Profile.findOne({ user: req.user.id });

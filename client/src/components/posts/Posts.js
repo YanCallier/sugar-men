@@ -6,15 +6,15 @@ import { getPosts } from '../../actions/post';
 import PostItem from './PostItem';
 import PostForm from './PostForm';
 
-const Posts = ({ getPosts, post: { posts, loading } }) => {
+const Posts = ({ getPosts, post: { posts, loading }, auth: { user } }) => {
   useEffect(() => {
-    console.log('PostS initiate');
-    getPosts();
+    if (user) getPosts(user._id);
   }, [getPosts]);
 
-  //getPosts();
-
-  if (loading) return <Spinner />;
+  if (loading) {
+    if (user) getPosts(user._id);
+    return <Spinner />;
+  }
 
   return (
     <Fragment>
@@ -31,11 +31,13 @@ const Posts = ({ getPosts, post: { posts, loading } }) => {
 };
 
 Posts.propTypes = {
+  auth: PropTypes.object.isRequired,
   getPosts: PropTypes.func.isRequired,
   post: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
+  auth: state.auth,
   post: state.post
 });
 

@@ -12,6 +12,12 @@ import {
 } from './types';
 import setAuthToken from '../utils/setAuthToken';
 
+// Socket
+import io from 'socket.io-client';
+var socket;
+
+//socket = io.connect('http://localhost:5000');
+
 // # Actions are payloads of information that send data from your application to redux store. They are the only source of information for the store.
 
 // # dispatch() : methode used in Actions to send payload to the store.
@@ -24,6 +30,8 @@ export const loadUser = () => async dispatch => {
 
   try {
     const res = await axios.get('api/auth');
+
+    socket.emit('hello', res.data);
 
     dispatch({
       type: USER_LOADED,
@@ -48,6 +56,9 @@ export const register = ({ name, email, password }) => async dispatch => {
 
   try {
     const res = await axios.post('/api/users', body, config);
+
+    socket = io.connect();
+    res.data.socket = socket;
 
     dispatch({
       type: REGISTER_SUCCESS,
@@ -81,6 +92,9 @@ export const login = (email, password) => async dispatch => {
   try {
     const res = await axios.post('/api/auth', body, config);
 
+    socket = io.connect();
+    res.data.socket = socket;
+
     dispatch({
       type: LOGIN_SUCCESS,
       payload: res.data
@@ -102,6 +116,7 @@ export const login = (email, password) => async dispatch => {
 
 //Logout
 export const logout = () => dispatch => {
+  socket.emit('by');
   dispatch({ type: CLEAR_PROFILE });
   dispatch({ type: LOGOUT });
 };

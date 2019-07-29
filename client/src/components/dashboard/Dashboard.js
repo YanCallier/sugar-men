@@ -20,7 +20,7 @@ const Dashboard = ({
   const [displayFriends, toggleFriends] = useState(false);
 
   if (profile === null) return <Spinner />;
-  console.log(profile.friends);
+
   return (
     <Fragment>
       <h1 className='large text-primary'>Dashboard</h1>
