@@ -19,7 +19,7 @@ const Dashboard = ({
 
   const [displayFriends, toggleFriends] = useState(false);
 
-  if (profile === null) return <Spinner />;
+  if (loading && profile === null) return <Spinner />;
 
   return (
     <Fragment>

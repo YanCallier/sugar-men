@@ -43,19 +43,22 @@ router.post(
         .isEmpty()
     ]
   ],
+
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    console.log(req.body);
 
-    const { sugar, quantity, position } = req.body;
+    const { sugar, quantity, position, status } = req.body;
 
     const profileFields = {};
     profileFields.user = req.user.id;
     profileFields.sugar = sugar;
     profileFields.quantity = quantity;
     profileFields.position = position;
+    profileFields.status = status;
 
     try {
       let profile = await Profile.findOne({ user: req.user.id });

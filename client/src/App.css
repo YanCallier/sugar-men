@@ -330,6 +330,7 @@ button {
 
 .chat {
   height: 20em;
+  overflow-y: scroll;
 }
 
 /* Navbar */
@@ -346,7 +347,8 @@ button {
   opacity: 0.9;
 }
 
-.navbar ul {
+.navbar,
+ul {
   display: flex;
 }
 
@@ -384,13 +386,29 @@ button {
   align-items: center;
 }
 
-/* .onlinePeople {
-  position: fixed;
-  bottom: 100px;
-  right: 100px;
-  opacity: 0.9;
-} */
+.redPastille {
+  border-radius: 50%;
+  background: var(--danger-color);
+}
 
+.peoplebar,
+ul {
+  display: flex;
+}
+
+.peoplebar a {
+  color: #fff;
+  padding: 0.45rem;
+  margin: 0 0.25rem;
+}
+
+.peoplebar a:hover {
+  color: var(--primary-color);
+}
+
+.peoplebar .welcome span {
+  margin-right: 0.6rem;
+}
 /* Landing Page */
 .landing {
   position: relative;

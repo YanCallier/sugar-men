@@ -29,15 +29,6 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-// io.on('connection', function(socket) {
-//   console.log('Socket ready');
-//   console.log(socket.id);
-
-//   socket.on('hello', function(payload) {
-//     console.log(payload);
-//   });
-// });
-
 const PORT = process.env.PORT || 5000;
 //const PORT = process.env.PORT;
 

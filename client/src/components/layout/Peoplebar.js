@@ -5,52 +5,52 @@ import PropTypes from 'prop-types';
 import SugarItem from './SugarItem';
 import { getOnlinePeople } from '../../actions/socketPeople';
 
-const Peoplebar = ({
-  // getOnlinePeople
-  auth: { isAuthenticated, loading, socket }
-}) => {
+const Peoplebar = ({ auth: { isAuthenticated, loading, socket, user } }) => {
   useEffect(() => {
     if (socket) {
       socket.emit('needPeople');
+
       socket.on('onlinePeople', users => {
+        setOnlinePeople([]);
         for (let user in users) {
           setOnlinePeople([...onlinePeople, users[user]]);
-          // setOnlinePeople(onlinePeople.push(user));
+          setUnviewMessages([
+            ...unviewMessages,
+            { userId: user, nbMessages: 0 }
+          ]);
         }
-        console.log('useEffect');
-        // test(users);
+      });
+      socket.on('incomingMessage', id => {
+        if (window.location.pathname === '/chat/' + id) {
+          setUnviewMessages(unviewMessages + 1);
+          console.log(unviewMessages);
+        }
       });
     }
   }, [socket]);
 
   const [onlinePeople, setOnlinePeople] = useState([]);
-  //const onlinePeople = [];
-  // const test = users => {
-  //   for (let user in users) {
-  //     onlinePeople.push(user);
-  //   }
-  // };
-
-  // if (socket) {
-  //   socket.emit('needPeople');
-  //   socket.on('onlinePeople', users => {
-  //     for (let user in users) {
-  //       onlinePeople.push(user);
-  //     }
-  //   });
-  // }
-  console.log(onlinePeople);
+  const [unviewMessages, setUnviewMessages] = useState([]);
 
   return (
     <Fragment>
-      {onlinePeople && (
+      {onlinePeople && onlinePeople.length > 0 && (
         <Fragment>
           <div className='peoplebar bg-dark'>
             <h2>
               <i className='fas fa-user-astronaut' /> Online
             </h2>
             {onlinePeople.map(sugarnaute => (
-              <SugarItem key={sugarnaute.name} sugarnaute={sugarnaute} />
+              <Link
+                to={'/chat/' + sugarnaute.id}
+                key={sugarnaute.id}
+                className='flex'
+                onClick={() => setUnviewMessages(0)}
+              >
+                <SugarItem sugarnaute={sugarnaute} />
+                {/* {unviewMessages[sugarnaute.id].  <i className='fas fa-comment-dots mx' /> }{' '}
+                 */}
+              </Link>
             ))}
             <h2>
               <i className='fas fa-chevron-up' />

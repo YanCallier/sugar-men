@@ -10,7 +10,6 @@ import CommentItem from '../post/CommentItem';
 
 const Post = ({ getPost, post: { post, loading }, match }) => {
   useEffect(() => {
-    console.log('Post initiate');
     getPost(match.params.id);
   }, [getPost]);
 
