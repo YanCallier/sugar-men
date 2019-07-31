@@ -5,9 +5,14 @@ const socketListener = function(io) {
     console.log('Socket ready ' + socket.id);
 
     socket.on('hello', function(user) {
-      users[socket.id] = { name: user.name, avatar: user.avatar, id: user._id };
+      users[socket.id] = {
+        name: user.name,
+        avatar: user.avatar,
+        id: user._id,
+        unviewMessages: {}
+      };
 
-      socket.emit('onlinePeople', users);
+      io.emit('onlinePeople', users);
     });
 
     socket.on('needPeople', function() {
@@ -61,6 +66,18 @@ const socketListener = function(io) {
         io.to(`${friendSocket}`).emit('incomingMessage', authorId);
       }
     );
+
+    socket.on('unviewMessage', function(id) {
+      users[socket.id].unviewMessages[id] = true;
+      socket.emit('updateUnviewMessages', users[socket.id].unviewMessages);
+    });
+
+    socket.on('removeUnviewMessages', function(id) {
+      if (users[socket.id].unviewMessages[id]) {
+        delete users[socket.id].unviewMessages[id];
+        socket.emit('updateUnviewMessages', users[socket.id].unviewMessages);
+      }
+    });
 
     socket.on('by', function() {
       console.log('A+ ' + socket.id);

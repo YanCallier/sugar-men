@@ -212,6 +212,23 @@ router.get('/', async (req, res) => {
   }
 });
 
+// @route    GET api/profile
+// @desc     Search profiles by name
+// @access   Public
+
+router.get('/status/:filter', async (req, res) => {
+  try {
+    const profiles = await Profile.find({ status: req.params.filter }).populate(
+      'user',
+      ['name', 'avatar']
+    );
+    res.json(profiles);
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 // @route    GET api/profile/user/:user_id
 // @desc     Get profile by user ID
 // @access   Public

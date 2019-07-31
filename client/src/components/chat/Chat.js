@@ -77,7 +77,7 @@ const Chat = ({ match, auth: { socket, user } }) => {
           onChange={e => setText(e.target.value)}
           required
         />
-        <input type='submit' className='btn btn-dark my-1' value='Submit' />
+        <input type='Envoyer' className='btn btn-dark my-1' value='Submit' />
       </form>
     </Fragment>
   );

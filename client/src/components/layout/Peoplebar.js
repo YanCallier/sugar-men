@@ -14,23 +14,27 @@ const Peoplebar = ({ auth: { isAuthenticated, loading, socket, user } }) => {
         setOnlinePeople([]);
         for (let user in users) {
           setOnlinePeople([...onlinePeople, users[user]]);
-          setUnviewMessages([
-            ...unviewMessages,
-            { userId: user, nbMessages: 0 }
-          ]);
         }
       });
       socket.on('incomingMessage', id => {
         if (window.location.pathname === '/chat/' + id) {
-          setUnviewMessages(unviewMessages + 1);
-          console.log(unviewMessages);
+          socket.emit('unviewMessage', id);
         }
+      });
+      socket.on('updateUnviewMessages', unviewMessages => {
+        setUnviewMessages(unviewMessages);
       });
     }
   }, [socket]);
 
   const [onlinePeople, setOnlinePeople] = useState([]);
-  const [unviewMessages, setUnviewMessages] = useState([]);
+  const [unviewMessages, setUnviewMessages] = useState({});
+
+  const removeUnviewMessages = id => {
+    if (socket) {
+      socket.emit('removeUnviewMessages', id);
+    }
+  };
 
   return (
     <Fragment>
@@ -38,16 +42,20 @@ const Peoplebar = ({ auth: { isAuthenticated, loading, socket, user } }) => {
         <Fragment>
           <div className='peoplebar bg-dark'>
             <h2>
-              <i className='fas fa-user-astronaut' /> Online
+              <i className='fas fa-user-astronaut' />
+              <span className='hide-sm '> Online</span>
             </h2>
             {onlinePeople.map(sugarnaute => (
               <Link
                 to={'/chat/' + sugarnaute.id}
                 key={sugarnaute.id}
                 className='flex'
-                onClick={() => setUnviewMessages(0)}
+                onClick={() => removeUnviewMessages(sugarnaute.id)}
               >
                 <SugarItem sugarnaute={sugarnaute} />
+                {unviewMessages[sugarnaute.id] && (
+                  <i className='fas fa-comment-dots mx' />
+                )}
                 {/* {unviewMessages[sugarnaute.id].  <i className='fas fa-comment-dots mx' /> }{' '}
                  */}
               </Link>
