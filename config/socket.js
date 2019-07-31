@@ -12,7 +12,14 @@ const socketListener = function(io) {
         unviewMessages: {}
       };
 
-      io.emit('onlinePeople', users);
+      let arrayUsers = [];
+      for (user in users) {
+        arrayUsers.push(users[user]);
+      }
+
+      console.log(arrayUsers);
+
+      io.emit('onlinePeople', arrayUsers);
     });
 
     socket.on('needPeople', function() {

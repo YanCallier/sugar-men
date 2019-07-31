@@ -11,10 +11,10 @@ const Peoplebar = ({ auth: { isAuthenticated, loading, socket, user } }) => {
       socket.emit('needPeople');
 
       socket.on('onlinePeople', users => {
-        setOnlinePeople([]);
-        for (let user in users) {
-          setOnlinePeople([...onlinePeople, users[user]]);
-        }
+        setOnlinePeople(users);
+        // for (let user in users) {
+        //   setOnlinePeople([...onlinePeople, users[user]]);
+        // }
         console.log(users);
       });
       socket.on('incomingMessage', id => {
