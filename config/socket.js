@@ -53,7 +53,14 @@ const socketListener = function(io) {
 
         if (!chatId) {
           chatId = authorId + friendId;
-          chatCollection[chatId] = [{ author: authorName, text: text }];
+          chatCollection[chatId] = [
+            {
+              author: authorName,
+              text: text,
+              speaker1: socket.id,
+              speaker2: friendSocket
+            }
+          ];
         } else {
           chatCollection[chatId].push({
             author: authorName,
@@ -88,7 +95,7 @@ const socketListener = function(io) {
     });
 
     socket.on('removeUnviewMessages', function(id) {
-      if (users[socket.id].unviewMessages[id]) {
+      if (users[socket.id] && users[socket.id].unviewMessages[id]) {
         delete users[socket.id].unviewMessages[id];
         socket.emit('updateUnviewMessages', users[socket.id].unviewMessages);
       }
@@ -97,6 +104,18 @@ const socketListener = function(io) {
     socket.on('by', function() {
       console.log('A+ ' + socket.id);
       delete users[socket.id];
+
+      for (chat in chatCollection) {
+        if (socket.id === chatCollection[chat].speaker1) {
+          io.to(`${chatCollection[chat].speaker2}`).emit('interlocuteurParti');
+          delete chatCollection[chat];
+        }
+
+        if (socket.id === chatCollection[chat].speaker2) {
+          io.to(`${chatCollection[chat].speaker1}`).emit('interlocuteurParti');
+          delete chatCollection[chat];
+        }
+      }
 
       let arrayUsers = [];
       for (user in users) {

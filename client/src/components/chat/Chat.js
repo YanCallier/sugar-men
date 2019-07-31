@@ -18,9 +18,13 @@ const Chat = ({ match, auth: { socket, user } }) => {
       socket.on('conversationUpdate', conversation => {
         setMessages(conversation);
       });
+      socket.on('interlocuteurParti', () => {
+        setinterlocuteurParti(true);
+      });
     }
   }, [socket]);
 
+  const [interlocuteurParti, setinterlocuteurParti] = useState(false);
   const [chatFriend, setChatFriend] = useState({});
   const [text, setText] = useState('');
   const [messages, setMessages] = useState([]);
@@ -36,6 +40,10 @@ const Chat = ({ match, auth: { socket, user } }) => {
       }
     });
   };
+
+  if (interlocuteurParti) {
+    return <Fragment>Votre interlocuteur est parti</Fragment>;
+  }
 
   return (
     <Fragment>
