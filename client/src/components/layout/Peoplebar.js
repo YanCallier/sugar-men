@@ -3,9 +3,8 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import SugarItem from './SugarItem';
-import { getOnlinePeople } from '../../actions/socketPeople';
 
-const Peoplebar = ({ auth: { isAuthenticated, loading, socket, user } }) => {
+const Peoplebar = ({ auth: { socket } }) => {
   useEffect(() => {
     if (socket) {
       socket.emit('needPeople');
@@ -72,8 +71,7 @@ const Peoplebar = ({ auth: { isAuthenticated, loading, socket, user } }) => {
 };
 
 Peoplebar.propTypes = {
-  auth: PropTypes.object.isRequired,
-  getOnlinePeople: PropTypes.func.isRequired
+  auth: PropTypes.object.isRequired
 };
 
 const mapeStateToProps = state => ({
@@ -82,5 +80,5 @@ const mapeStateToProps = state => ({
 
 export default connect(
   mapeStateToProps,
-  { getOnlinePeople }
+  {}
 )(Peoplebar);

@@ -25,7 +25,7 @@ const ProfileIteme = ({
         <Link to={'/profile/' + _id} className='btn btn-primary my-1'>
           Voir cette personne
         </Link>
-        {auth.isAuthenticated && !auth.loading && auth.user._id != _id && (
+        {auth.isAuthenticated && !auth.loading && auth.user._id !== _id && (
           <div className='btn btn-dark' onClick={friendCheck}>
             Demander en ami
           </div>

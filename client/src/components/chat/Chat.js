@@ -1,9 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import Spinner from '../layout/Spinner';
-import { getCurrentProfile } from '../../actions/profile';
 
 const Chat = ({ match, auth: { socket, user } }) => {
   useEffect(() => {
@@ -12,11 +9,9 @@ const Chat = ({ match, auth: { socket, user } }) => {
       socket.on('chatFriend', user => {
         setChatFriend(user);
       });
-      socket.emit('chatMessage', {
+      socket.emit('needConversation', {
         payload: {
-          text: 'Chat ouvert',
           authorId: user._id,
-          authorName: user.name,
           friendId: match.params.friendId
         }
       });

@@ -74,6 +74,14 @@ const socketListener = function(io) {
       }
     );
 
+    socket.on('needConversation', ({ payload: { authorId, friendId } }) => {
+      let chatId;
+      if (chatCollection[authorId + friendId]) chatId = authorId + friendId;
+      if (chatCollection[friendId + authorId]) chatId = friendId + authorId;
+
+      if (chatId) socket.emit('conversationUpdate', chatCollection[chatId]);
+    });
+
     socket.on('unviewMessage', function(id) {
       users[socket.id].unviewMessages[id] = true;
       socket.emit('updateUnviewMessages', users[socket.id].unviewMessages);
@@ -89,10 +97,13 @@ const socketListener = function(io) {
     socket.on('by', function() {
       console.log('A+ ' + socket.id);
       delete users[socket.id];
-      io.emit('onlinePeople', users);
+
+      let arrayUsers = [];
       for (user in users) {
-        console.log(user);
+        arrayUsers.push(users[user]);
       }
+      io.emit('onlinePeople', arrayUsers);
+
       socket.disconnect();
     });
   });
