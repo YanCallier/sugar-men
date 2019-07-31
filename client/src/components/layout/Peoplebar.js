@@ -36,6 +36,8 @@ const Peoplebar = ({ auth: { socket } }) => {
     }
   };
 
+  if (!socket) return <Fragment />;
+
   return (
     <Fragment>
       {onlinePeople && onlinePeople.length > 0 && (
