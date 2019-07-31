@@ -15,7 +15,7 @@ const Peoplebar = ({ auth: { isAuthenticated, loading, socket, user } }) => {
         for (let user in users) {
           setOnlinePeople([...onlinePeople, users[user]]);
         }
-        console.log(onlinePeople);
+        console.log(users);
       });
       socket.on('incomingMessage', id => {
         if (window.location.pathname !== '/chat/' + id) {

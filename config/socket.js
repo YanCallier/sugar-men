@@ -82,7 +82,7 @@ const socketListener = function(io) {
     socket.on('by', function() {
       console.log('A+ ' + socket.id);
       delete users[socket.id];
-      socket.emit('onlinePeople', users);
+      io.emit('onlinePeople', users);
       for (user in users) {
         console.log(user);
       }
